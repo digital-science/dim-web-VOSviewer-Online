@@ -120,7 +120,7 @@ const Dimensions = observer(({ queryString = {}, fullscreenHandle }) => {
             <>
               <Open />
               <Save />
-              <Share />
+              {configStore.uiConfig.share_icon && <Share />}
               <Screenshot />
             </>
           )}
