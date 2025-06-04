@@ -15,9 +15,10 @@ Object.keys(peerDependencies).forEach(key => {
   delete dependencies[key];
 });
 const newPkg = {
-  name: 'vosviewer-online',
+  name: "@vosviewer-fork/vosviewer-online",
   version,
-  description: "React component package for integrating VOSviewer Online into your site or application.",
+  description:
+    "React component package for integrating VOSviewer Online into your site or application.",
   author,
   keywords,
   license,
@@ -28,7 +29,7 @@ const newPkg = {
   main: "./index.js",
   dependencies,
   peerDependencies,
-  engines
+  engines,
 };
 
 fs.writeFileSync(`lib/package.json`, JSON.stringify(newPkg, null, 2));
