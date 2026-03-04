@@ -1,35 +1,52 @@
 name: Push NPM
-on: push
+
+on:
+  push:
+    branches: [master]
+
+concurrency:
+  group: publish-npm
+  cancel-in-progress: false
+
 jobs:
   push:
     runs-on: ubuntu-latest
     name: NPM Push Demo
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+      
+      - uses: actions/setup-node@v4
         with:
           node-version: '16'
+          cache: 'npm'
+      
       - run: npm install
       # - run: npm run build:vosviewer
       # - run: npm run build:dimensions
       # - run: npm run build:zeta-alpha
       # - run: npm run build:rori
       - run: npm run build-component-package
+      
       # - name: Upload Dimensions app artifact
         # uses: actions/upload-artifact@v4
         # with:
           # name: vosviewer-online-dimensions-app
           # path: dist/vosviewer-online-dimensions 
+      
       - name: Create npm package
         run: cd lib && npm pack
+      
       - name: Get package filename
         id: create-package
         run: echo "package_file=$(ls lib/*.tgz | xargs basename)" >> $GITHUB_OUTPUT
+      
       - name: Upload npm package artifact
         uses: actions/upload-artifact@v4
         with:
           name: vosviewer-online.tgz
           path: "lib/${{ steps.create-package.outputs.package_file }}"
+          retention-days: 60
+      
       - name: Cloudsmith Push
         uses: cloudsmith-io/action@v0.6.14
         with:
